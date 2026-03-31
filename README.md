@@ -77,7 +77,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement receive function in Notification controller.`
     -   [x] Commit: `Implement list_messages function in Notification service.`
     -   [x] Commit: `Implement list function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -102,4 +102,18 @@ Perbedaan penanganan variabel statik antara Rust dan Java mendemonstrasikan baga
 
 </details>
 
-#### Reflection Subscriber-2
+<details>
+<summary><b>Reflection Subscriber-2</b></summary>
+
+**1. Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not, explain why you did not do so. If yes, explain things that you have learned from those other parts of code.**
+Ya, saya melihat dan explore bagian src/lib.rs. Dari sana, saya belajar mengenai bagaimana ekosistem Rust memisahkan antara binary crate (main.rs) dan library crate (lib.rs). Pemisahan ini membuat struktur kode menjadi jauh lebih rapi dan modular. File lib.rs digunakan untuk membungkus core logic, penanganan error, atau modul-modul spesifik aplikasi agar bisa digunakan ulang (reusable), sementara main.rs hanya berfokus sebagai titik awal (entry point) untuk menjalankan server aplikasi.
+
+
+**2. Since you have completed the tutorial by now and have tried to test your notification system by spawning multiple instances of Receiver, explain how Observer pattern eases you to plug in more subscribers. How about spawning more than one instance of Main app, will it still be easy enough to add to the system?**
+Pola Observer membuat penambahan subscriber baru menjadi sangat mudah (plug-and-play). Karena Publisher dan Subscriber bersifat loosely coupled (tidak terikat erat), kita hanya perlu meregistrasikan URL receiver baru ke endpoint Main app. Sistem secara otomatis akan menambahkan subscriber tersebut ke dalam list tanpa perlu mengubah atau menghentikan kode pada Main app sama sekali. Sebaliknya, menjalankan lebih dari satu instance dari Main app (Publisher) tidak akan semudah itu dengan arsitektur kita saat ini. Saat ini, daftar subscriber disimpan secara in-memory (menggunakan DashMap dan lazy_static). Jika kita menyalakan beberapa Main app sekaligus, memori tersebut tidak akan saling terhubung antar-instance. Agar bisa sinkron, kita perlu mengubah arsitekturnya menggunakan database terpusat atau cache eksternal (seperti Redis).
+
+
+**3. Have you tried to make your own Tests, or enhance documentation on your Postman collection? If you have tried those features, tell us whether it is useful for your work (it can be your tutorial work or your Group Project).**
+Untuk saat ini, saya belum mencoba membuat tests sendiri ataupun meningkatkan dokumentasi pada Postman collection. Sejauh ini fokus saya masih di tahap menyelesaikan implementasi design patterns dari tutorial agar berjalan lancar. Meskipun begitu, saya yakin fitur testing otomatis dan dokumentasi di Postman akan sangat bermanfaat nantinya untuk memastikan semua endpoint berjalan stabil tanpa harus diuji manual berulang kali, terutama saat mengerjakan Group Project ke depannya.
+
+</details>
