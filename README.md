@@ -66,7 +66,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Create Notification database and Notification repository struct skeleton.`
     -   [x] Commit: `Implement add function in Notification repository.`
     -   [x] Commit: `Implement list_all_as_string function in Notification repository.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
 -   **STAGE 3: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -84,6 +84,22 @@ This is the place for you to write reflections:
 
 ### Mandatory (Subscriber) Reflections
 
-#### Reflection Subscriber-1
+<details>
+<summary><b>Reflection Subscriber-1</b></summary>
+
+**1. In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why it is necessary for this case, and explain why we do not use Mutex<> instead?**
+Penggunaan RwLock sangat diperlukan dan jauh lebih baik daripada Mutex untuk kasus ini karena:
+- **Karakteristik Operasi:** Pada aplikasi receiver, proses membaca daftar notifikasi (read) jauh lebih sering terjadi dibandingkan proses menerima notifikasi baru (write).
+- **Keunggulan RwLock:** RwLock mengizinkan banyak thread untuk membaca data secara bersamaan (multiple readers). Akses hanya akan dikunci secara eksklusif jika ada thread yang ingin menambah data baru (writer).
+- **Kekurangan Mutex:** Mutex bekerja terlalu kaku karena hanya mengizinkan satu thread untuk mengakses data pada satu waktu, baik itu untuk read maupun write. Jika kita memakai Mutex, request untuk melihat notifikasi yang masuk bersamaan harus mengantre satu per satu, sehingga menyebabkan bottleneck dan menurunkan performa aplikasi.
+
+
+**2. In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static” variable. Compared to Java where we can mutate the content of a static variable via a static function, why did not Rust allow us to do so?**
+Perbedaan penanganan variabel statik antara Rust dan Java mendemonstrasikan bagaimana Rust sangat menjaga memory safety:
+- **Fleksibilitas Java:** Di Java, kita bisa memodifikasi static variable secara langsung lewat static function karena dikelola oleh JVM. Namun, hal ini sebenarnya rentan memicu data race jika diakses banyak thread secara bersamaan tanpa lock manual.
+- **Ketahanan Rust:** Rust mengedepankan thread safety yang sangat ketat. Compiler Rust akan menolak (error) jika kita mencoba memodifikasi variabel static standar karena hal tersebut sangat berpotensi memicu race condition.
+- **Fungsi lazy_static:** Supaya kita tetap bisa punya variabel global dengan aman, kita menggunakan makro lazy_static!. Library ini memungkinkan kita menginisialisasi struktur data kompleks (seperti Vec atau DashMap) saat runtime sekaligus membungkusnya agar thread-safe. Hasilnya, kita tetap bisa memiliki global state seperti di Java, tetapi dengan jaminan aman dari bug konkurensi.
+
+</details>
 
 #### Reflection Subscriber-2
